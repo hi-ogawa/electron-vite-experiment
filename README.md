@@ -15,6 +15,10 @@ npm run package
 
 ![image](https://user-images.githubusercontent.com/4232207/190849029-d6f91f8d-b419-4fbd-934f-4d03585c29d5.png)
 
+## examples
+
+- https://github.com/hi-ogawa/toy-process-manager
+
 ## todo
 
 - [x] preload script
