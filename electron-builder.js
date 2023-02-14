@@ -1,9 +1,9 @@
 /** @type {import('electron-builder').Configuration} */
 const CONFIG = {
   directories: {
-    output: "dist-package",
+    output: "dist/package",
   },
-  files: ["dist"],
+  files: ["dist/src", "dist/main", "dist/assets"],
   // https://www.electron.build/configuration/appimage
   linux: {
     target: "AppImage",

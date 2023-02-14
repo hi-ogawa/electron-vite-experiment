@@ -10,7 +10,7 @@ pnpm dev  # type "rs + Enter" to restart electron
 # package and run
 pnpm build
 pnpm package
-./dist-package/electron-vite-experiment-0.0.0.AppImage
+./dist/package/electron-vite-experiment-0.0.0.AppImage
 ```
 
 ![image](https://user-images.githubusercontent.com/4232207/190849029-d6f91f8d-b419-4fbd-934f-4d03585c29d5.png)
@@ -18,10 +18,3 @@ pnpm package
 ## examples
 
 - https://github.com/hi-ogawa/toy-process-manager
-
-## todo
-
-- [x] preload script
-- [x] package application
-- [ ] write as vite plugin using vavite multibuild https://github.com/cyco130/vavite
-- [ ] read electron blink shell implementation https://github.com/electron/electron/tree/main/shell
