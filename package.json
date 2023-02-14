@@ -18,7 +18,7 @@
     "lint:prettier": "prettier --write --cache .",
     "lint-check": "run-s lint-check:*",
     "lint-check:eslint": "eslint . --cache --cache-location node_modules/.cache/.eslintcache --ext .js,.jsx,.ts,.tsx",
-    "lint-check:check": "npm run prettier -- --check"
+    "lint-check:check": "prettier --check --check ."
   },
   "devDependencies": {
     "@tsconfig/node16-strictest": "^1.0.4",
