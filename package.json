@@ -4,10 +4,10 @@
   "main": "./dist/main/index.js",
   "scripts": {
     "dev": "run-p dev:*",
-    "dev:electron": "APP_RENDERER_URL=http://localhost:18181/src/renderer/index.html && curl --retry 5 --retry-connrefused $APP_RENDERER_URL 1>/dev/null && nodemon --exec 'electron ./dist/main/index.js' -i '*'",
     "dev:main": "pnpm build:main --watch",
     "dev:renderer": "vite --port 18181 --no-clearScreen",
     "dev:tsc": "pnpm tsc --watch --preserveWatchOutput",
+    "dev:electron": "APP_RENDERER_URL=http://localhost:18181/src/renderer/index.html && curl --retry 5 --retry-connrefused $APP_RENDERER_URL 1>/dev/null && nodemon --exec 'electron ./dist/main/index.js' -i '*'",
     "build": "run-s build:*",
     "build:main": "esbuild src/main/index.ts src/main/index-preload.ts --outdir=dist/main --bundle --platform=node --external:electron",
     "build:renderer": "vite build",
