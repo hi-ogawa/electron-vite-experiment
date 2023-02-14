@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "run-p dev:*",
     "dev:main": "pnpm build:main --watch",
+    "dev:preload": "pnpm build:preload --watch",
     "dev:renderer": "vite --port 18181 --no-clearScreen",
     "dev:tsc": "pnpm tsc --watch --preserveWatchOutput",
-    "dev:electron": "APP_RENDERER_URL=http://localhost:18181/src/renderer/index.html && curl --retry 5 --retry-connrefused $APP_RENDERER_URL 1>/dev/null && nodemon --exec 'electron ./dist/main/index.js' -i '*'",
+    "dev:electron": "export APP_RENDERER_URL=http://localhost:18181/src/renderer/index.html && curl --retry 5 --retry-connrefused $APP_RENDERER_URL 1>/dev/null && nodemon --exec 'electron ./dist/main/index.js' -i '*'",
     "build": "run-s build:*",
-    "build:main": "esbuild src/main/index.ts src/main/index-preload.ts --outdir=dist/main --bundle --platform=node --external:electron",
+    "build:main": "esbuild src/main/index.ts --outdir=dist/main --sourcemap=inline --format=cjs --bundle --platform=node --external:electron",
+    "build:preload": "esbuild src/preload/index.ts --outdir=dist/preload --sourcemap=inline --format=iife --bundle --platform=node --external:electron",
     "build:renderer": "vite build",
     "package": "electron-builder build",
     "tsc": "tsc -b",
@@ -21,6 +23,7 @@
     "lint-check:check": "prettier --check --check ."
   },
   "devDependencies": {
+    "@hiogawa/utils": "^1.0.2",
     "@tsconfig/node16-strictest": "^1.0.4",
     "@tsconfig/strictest": "^1.0.2",
     "@types/node": "^18.13.0",
@@ -29,6 +32,7 @@
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "@vitejs/plugin-react": "^2.2.0",
+    "comlink": "^4.4.1",
     "electron": "^20.3.12",
     "electron-builder": "^23.6.0",
     "esbuild": "^0.15.18",

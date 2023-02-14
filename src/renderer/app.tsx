@@ -1,7 +1,15 @@
 import React from "react";
+import { mainServiceClient } from "./service-client";
 
-export function Root() {
+export function App() {
   const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    (async () => {
+      const result = await mainServiceClient.hello("project");
+      console.log(result);
+    })();
+  }, []);
 
   return (
     <div className="h-full bg-gray-50">

@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@hiogawa/utils': ^1.0.2
       '@tsconfig/node16-strictest': ^1.0.4
       '@tsconfig/strictest': ^1.0.2
       '@types/node': ^18.13.0
@@ -12,6 +13,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.52.0
       '@typescript-eslint/parser': ^5.52.0
       '@vitejs/plugin-react': ^2.2.0
+      comlink: ^4.4.1
       electron: ^20.3.12
       electron-builder: ^23.6.0
       esbuild: ^0.15.18
@@ -27,6 +29,7 @@ importers:
       vite: ^3.2.5
       vite-plugin-windicss: ^1.8.10
     devDependencies:
+      '@hiogawa/utils': 1.0.2
       '@tsconfig/node16-strictest': 1.0.4
       '@tsconfig/strictest': 1.0.2
       '@types/node': 18.13.0
@@ -35,6 +38,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.52.0_6cfvjsbua5ptj65675bqcn6oza
       '@typescript-eslint/parser': 5.52.0_7kw3g6rralp5ps6mg3uyzz6azm
       '@vitejs/plugin-react': 2.2.0_vite@3.2.5
+      comlink: 4.4.1
       electron: 20.3.12
       electron-builder: 23.6.0
       esbuild: 0.15.18
@@ -640,6 +644,10 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@hiogawa/utils/1.0.2:
+    resolution: {integrity: sha512-LpHFeUD0hd+tIijN0uKml+xLK3Rqm685M8wNiPWo0m+Q+q8Bz2zUGEP7h4/3nMgVNJPSXzoPAO+1qKO5Y//z1g==}
     dev: true
 
   /@humanwhocodes/config-array/0.11.8:
@@ -1602,6 +1610,10 @@ packages:
     engines: {node: '>= 0.8'}
     dependencies:
       delayed-stream: 1.0.0
+    dev: true
+
+  /comlink/4.4.1:
+    resolution: {integrity: sha512-+1dlx0aY5Jo1vHy/tSsIGpSkN4tS9rZSW8FIhG0JH/crs9wwweswIo/POr451r7bZww3hFbPAKnTpimzL/mm4Q==}
     dev: true
 
   /commander/2.9.0:
