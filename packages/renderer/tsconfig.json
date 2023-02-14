@@ -1,9 +1,0 @@
-{
-  "extends": "@tsconfig/node16-strictest",
-  "include": ["src"],
-  "compilerOptions": {
-    "lib": ["ES2021", "dom"],
-    "noEmit": true,
-    "jsx": "react-jsx"
-  }
-}

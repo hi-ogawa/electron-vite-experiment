@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>Electron Vite Experiment</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self' 'unsafe-inline';"
+    />
     <style>
       html,
       body,
@@ -13,6 +17,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script src="./src/index.ts" type="module"></script>
+    <script src="./index.ts" type="module"></script>
   </body>
 </html>
