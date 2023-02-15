@@ -5,6 +5,14 @@ export function App() {
   const [count, setCount] = React.useState(0);
 
   React.useEffect(() => {
+    // TODO: proxy
+    // TODO: unsubscribe
+    mainServiceClient.subscribe("timer", () => {
+      console.log("timer");
+    });
+  }, []);
+
+  React.useEffect(() => {
     (async () => {
       const result = await mainServiceClient.hello("project");
       console.log(result);
