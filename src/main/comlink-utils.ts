@@ -28,6 +28,9 @@ function toMainEndpoint(port: Electron.MessagePortMain): comlink.Endpoint {
       _options?: {}
     ) => {
       const wrapper = (event: Electron.MessageEvent) => {
+        // TODO: transfered port appears only in
+        event.ports;
+
         const comlinkEvent = { data: event.data } as MessageEvent;
         if ("handleEvent" in listener) {
           listener.handleEvent(comlinkEvent);

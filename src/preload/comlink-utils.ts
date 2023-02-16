@@ -1,5 +1,5 @@
 import { tinyassert } from "@hiogawa/utils";
-import type * as comlink from "comlink";
+import * as comlink from "comlink";
 import { ipcRenderer } from "electron";
 import { generateId } from "../utils/misc";
 
@@ -14,7 +14,7 @@ export function createComlinkEndpointPreload(
     function handler(_: Electron.IpcRendererEvent, reply: unknown) {
       tinyassert(reply);
       if ((reply as any).id === message.id) {
-        resolve(toEndpoint(port2));
+        resolve(toPreloadEndpoint(port2));
         ipcRenderer.off(channel, handler);
       }
     }
@@ -27,7 +27,7 @@ export function createComlinkEndpointPreload(
   return result;
 }
 
-function toEndpoint(port: MessagePort): comlink.Endpoint {
+export function toPreloadEndpoint(port: MessagePort): comlink.Endpoint {
   const listerWrappers = new WeakMap<object, any>();
 
   return {
@@ -35,7 +35,8 @@ function toEndpoint(port: MessagePort): comlink.Endpoint {
 
     postMessage: (message: any, transfer?: Transferable[]) => {
       tinyassert((transfer ?? []).length === 0);
-      port.postMessage(message, []);
+      const { port1 } = new MessageChannel();
+      port.postMessage(message, [port1]);
     },
 
     addEventListener: (type: string, listener: any, options?: {}) => {
@@ -62,3 +63,72 @@ function toEndpoint(port: MessagePort): comlink.Endpoint {
     },
   };
 }
+
+// cf. https://github.com/GoogleChromeLabs/comlink/blob/dffe9050f63b1b39f30213adeb1dd4b9ed7d2594/src/comlink.ts#L209
+// TODO: `serialize` (i.e. instanciation MessageChannel) should happen in "preload" instead of "renderer"
+export const proxyTransferHandlerPreload: comlink.TransferHandler<
+  any,
+  MessagePort
+> = {
+  canHandle: (value: unknown): value is any => {
+    return Boolean(
+      value &&
+        (typeof value === "object" || typeof value === "function") &&
+        comlink.proxyMarker in value
+    );
+  },
+
+  serialize: (value: any): [MessagePort, Transferable[]] => {
+    const { port1, port2 } = new MessageChannel();
+    comlink.expose(value, toPreloadEndpoint(port1));
+    return [port2, [port2]];
+  },
+
+  deserialize: (_serialized: unknown): any => {
+    tinyassert(false, "cannot run on preload");
+  },
+};
+
+export const proxyTransferHandlerMain: comlink.TransferHandler<
+  any,
+  Electron.MessagePortMain
+> = {
+  canHandle: (value: unknown): value is any => {
+    return Boolean(
+      value &&
+        (typeof value === "object" || typeof value === "function") &&
+        comlink.proxyMarker in value
+    );
+  },
+
+  serialize: (_value: any): [Electron.MessagePortMain, Transferable[]] => {
+    tinyassert(false, "cannot run on main");
+  },
+
+  deserialize: (port2: Electron.MessagePortMain): any => {
+    port2;
+  },
+};
+
+export const proxyTransferHandlerRenderer: comlink.TransferHandler<
+  any,
+  MessagePort
+> = {
+  canHandle: (value: unknown): value is any => {
+    return Boolean(
+      value &&
+        (typeof value === "object" || typeof value === "function") &&
+        comlink.proxyMarker in value
+    );
+  },
+
+  serialize: (value: any): [MessagePort, Transferable[]] => {
+    const { port1, port2 } = new MessageChannel();
+    comlink.expose(value, toPreloadEndpoint(port1));
+    return [port2, [port2]];
+  },
+
+  deserialize: (_serialized: unknown): any => {
+    tinyassert(false, "cannot run on preload");
+  },
+};

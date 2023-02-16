@@ -4,7 +4,7 @@ importers:
 
   .:
     specifiers:
-      '@hiogawa/utils': ^1.0.2
+      '@hiogawa/utils': ^1.0.3
       '@tsconfig/node16-strictest': ^1.0.4
       '@tsconfig/strictest': ^1.0.2
       '@types/node': ^18.13.0
@@ -29,7 +29,7 @@ importers:
       vite: ^3.2.5
       vite-plugin-windicss: ^1.8.10
     devDependencies:
-      '@hiogawa/utils': 1.0.2
+      '@hiogawa/utils': 1.0.3
       '@tsconfig/node16-strictest': 1.0.4
       '@tsconfig/strictest': 1.0.2
       '@types/node': 18.13.0
@@ -646,8 +646,8 @@ packages:
       - supports-color
     dev: true
 
-  /@hiogawa/utils/1.0.2:
-    resolution: {integrity: sha512-LpHFeUD0hd+tIijN0uKml+xLK3Rqm685M8wNiPWo0m+Q+q8Bz2zUGEP7h4/3nMgVNJPSXzoPAO+1qKO5Y//z1g==}
+  /@hiogawa/utils/1.0.3:
+    resolution: {integrity: sha512-qS3gAjVBhbeLedvcd+qZ4dMz3yVVRYHN0GllSsRScB2JAnvcUDmcwqbJmNmBjAIqqkOU4x5ng9L3bI9c7LISEg==}
     dev: true
 
   /@humanwhocodes/config-array/0.11.8:
