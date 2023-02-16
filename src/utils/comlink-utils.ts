@@ -1,6 +1,8 @@
 import { tinyassert } from "@hiogawa/utils";
 import type { Endpoint } from "comlink";
 
+const INJECTED_PRELOAD_TO_MAIN_PORTS = "__INJECTED_PRELOAD_TO_MAIN_PORTS";
+
 export function toMainEndpoint(port: Electron.MessagePortMain): Endpoint {
   const listerWrappers = new WeakMap<object, any>();
 
@@ -18,6 +20,12 @@ export function toMainEndpoint(port: Electron.MessagePortMain): Endpoint {
       _options?: {}
     ) => {
       const wrapper = (event: Electron.MessageEvent) => {
+        // sneak in ports into "data" payload
+        if (event.ports.length > 0) {
+          Object.assign(event.data, {
+            [INJECTED_PRELOAD_TO_MAIN_PORTS]: event.ports,
+          });
+        }
         const comlinkEvent = { data: event.data } as MessageEvent;
         if ("handleEvent" in listener) {
           listener.handleEvent(comlinkEvent);
@@ -53,8 +61,7 @@ export function toPreloadEndpoint(port: MessagePort): Endpoint {
     start: port.start.bind(port),
 
     postMessage: (message: any, transfer?: Transferable[]) => {
-      tinyassert((transfer ?? []).length === 0);
-      port.postMessage(message, []);
+      port.postMessage(message, transfer ?? []);
     },
 
     addEventListener: (type: string, listener: any, options?: {}) => {
