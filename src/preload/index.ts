@@ -1,10 +1,6 @@
-import type * as comlink from "comlink";
 import { contextBridge, ipcRenderer } from "electron";
-import { handshakePortPreload } from "../utils/message-channel-utils";
-import {
-  createComlinkEndpointPreload,
-  toPreloadEndpoint,
-} from "./comlink-utils";
+import { toPreloadEndpoint } from "../utils/comlink-utils";
+import { sendMessagePortPreload } from "../utils/message-channel-utils";
 import { PRELOAD_API } from "./common";
 
 function main() {
@@ -13,10 +9,8 @@ function main() {
 }
 
 export class PreloadApi {
-  createComlinkEndpointPreload = createComlinkEndpointPreload;
-
-  handshakePortPreload = async (channel: string): Promise<comlink.Endpoint> => {
-    const port = await handshakePortPreload(ipcRenderer, channel);
+  sendMessagePort = async (channel: string) => {
+    const port = await sendMessagePortPreload(ipcRenderer, channel);
     return toPreloadEndpoint(port);
   };
 }

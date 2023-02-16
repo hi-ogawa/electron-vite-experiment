@@ -1,48 +1,59 @@
 import { tinyassert } from "@hiogawa/utils";
 import { generateId } from "./misc";
 
-// instantiate MessageChannel in preload and share MessagePort with main
+// instantiate MessageChannel in preload and send MessagePort to main
 
-export async function handshakePortPreload(
+export async function sendMessagePortPreload(
   ipcRenderer: Electron.IpcRenderer,
   channel: string
 ): Promise<MessagePort> {
-  console.log("handshakePortPreload", { channel });
-
   const { port1, port2 } = new MessageChannel();
-  const id = `handshakePortPreload-${generateId()}`;
+  const id = `sendMessagePortPreload-${generateId()}`;
   const message = { id };
 
-  const result = new Promise<MessagePort>((resolve) => {
+  ipcRenderer.postMessage(channel, message, [port1]);
+
+  await new Promise((resolve) => {
     function handler(_: Electron.IpcRendererEvent, reply: unknown) {
-      console.log("handshakePortPreload.handler", reply);
       tinyassert(reply);
       if ((reply as any).id === message.id) {
-        resolve(port2);
         ipcRenderer.off(channel, handler);
+        resolve(null);
       }
     }
 
     ipcRenderer.on(channel, handler);
   });
 
-  ipcRenderer.postMessage(channel, message, [port1]);
-
-  return result;
+  port2.start();
+  return port2;
 }
 
-export async function handshakePortMain(
+export function receiveMessagePortMain(
+  ipcMain: Electron.IpcMain,
+  channel: string,
+  onPort: (port: Electron.MessagePortMain) => void
+) {
+  const handler = (e: Electron.IpcMainEvent, message: unknown) => {
+    const port = e.ports[0];
+    tinyassert(port);
+    onPort(port);
+    e.sender.postMessage(channel, message);
+  };
+  ipcMain.on(channel, handler);
+  return () => {
+    ipcMain.off(channel, handler);
+  };
+}
+
+export function receiveMessagePortMainPromise(
   ipcMain: Electron.IpcMain,
   channel: string
 ): Promise<Electron.MessagePortMain> {
-  console.log("handshakePortMain", { channel });
   return new Promise((resolve) => {
-    ipcMain.on(channel, (e, message: unknown) => {
-      console.log("handshakePortMain.handler", message);
-      const port = e.ports[0];
-      tinyassert(port);
+    const unsubscribe = receiveMessagePortMain(ipcMain, channel, (port) => {
+      unsubscribe();
       resolve(port);
-      e.sender.postMessage(channel, message);
     });
   });
 }

@@ -1,24 +1,26 @@
 import path from "path";
-import { BrowserWindow, app } from "electron";
-import { exposeComlinkMain } from "./comlink-utils";
-import { COMLINK_HANDSHAKE_MESSAGE } from "./common";
+import { expose } from "comlink";
+import { BrowserWindow, app, ipcMain } from "electron";
+import { toMainEndpoint } from "../utils/comlink-utils";
+import { receiveMessagePortMain } from "../utils/message-channel-utils";
+import { EXPOSE_MAIN_SERVICE } from "./common";
 import { MainService } from "./service";
 
 async function main() {
   await app.whenReady();
 
-  // expose main service
+  // expose service from main to all renderers
   const service = new MainService();
-  exposeComlinkMain(COMLINK_HANDSHAKE_MESSAGE, service);
+  receiveMessagePortMain(ipcMain, EXPOSE_MAIN_SERVICE, (port) => {
+    expose(service, toMainEndpoint(port));
+  });
 
-  // window
+  // create window
   const window = new BrowserWindow({
     webPreferences: {
       preload: path.resolve(__dirname, "../preload/index.js"),
     },
   });
-
-  // load page
   const url =
     process.env["APP_RENDERER_URL"] ??
     new URL(`file://${__dirname}/../src/renderer/index.html`).toString();
