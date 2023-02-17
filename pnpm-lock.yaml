@@ -19,6 +19,7 @@ importers:
       esbuild: ^0.15.18
       eslint: ^8.34.0
       eslint-plugin-import: ^2.27.5
+      eventemitter3: ^5.0.0
       nodemon: ^2.0.20
       npm-run-all: ^4.1.5
       prettier: ^2.8.4
@@ -44,6 +45,7 @@ importers:
       esbuild: 0.15.18
       eslint: 8.34.0
       eslint-plugin-import: 2.27.5_mcvs2y73sfmcxqzpjj5lr7a2m4
+      eventemitter3: 5.0.0
       nodemon: 2.0.20
       npm-run-all: 4.1.5
       prettier: 2.8.4
@@ -2650,6 +2652,10 @@ packages:
   /esutils/2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /eventemitter3/5.0.0:
+    resolution: {integrity: sha512-riuVbElZZNXLeLEoprfNYoDSwTBRR44X3mnhdI1YcnENpWTCsTTVZ2zFuqQcpoyqPQIUXdiPEU0ECAq0KQRaHg==}
     dev: true
 
   /extract-zip/2.0.1:
