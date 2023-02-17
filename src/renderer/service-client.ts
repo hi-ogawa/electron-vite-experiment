@@ -17,7 +17,7 @@ export async function initializeMainServiceClient(): Promise<void> {
   // TODO: can we abstract like "exposeEventEmitter/wrapEventEmitter"
   const subscriptionId = generateId();
   const [, port] = await Promise.all([
-    // TODO: does order matters?
+    // TODO: race condition? (preload sends early before main is ready?)
     mainServiceClient.subscribe("test", subscriptionId),
     getGlobalPreloadApi().sendMessagePort(subscriptionId),
   ]);
