@@ -1,8 +1,11 @@
 import { Remote, wrap } from "comlink";
-import { EXPOSE_MAIN_SERVICE } from "../main/common";
+import { DEFAULT_EVENT, EXPOSE_MAIN_SERVICE } from "../main/common";
 import type { MainService } from "../main/service";
 import { getGlobalPreloadApi } from "../preload/common";
-import { sendCallbackRenderer } from "../utils/comlink-event-utils";
+import {
+  EventEmitterMain,
+  EventEmitterRenderer,
+} from "../utils/comlink-event-utils";
 
 export let mainServiceClient: Remote<MainService>;
 
@@ -14,11 +17,11 @@ export async function initializeMainServiceClient(): Promise<void> {
   mainServiceClient = wrap<MainService>(endpoint);
 
   // register callback via dedicated port
-  await sendCallbackRenderer(
-    (event) => {
-      console.log("test received", event);
-    },
-    (id) => getGlobalPreloadApi().sendMessagePort(id),
-    (id) => mainServiceClient.subscribe(id)
+  const eventEmitterClient = new EventEmitterRenderer(
+    mainServiceClient.eventEmitter as unknown as Remote<EventEmitterMain>, // TODO: wrong comlink typing
+    getGlobalPreloadApi().sendMessagePort
   );
+  await eventEmitterClient.on(DEFAULT_EVENT, (...args) => {
+    console.log({ args });
+  });
 }

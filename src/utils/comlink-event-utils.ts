@@ -1,5 +1,5 @@
 import { DefaultMap, tinyassert } from "@hiogawa/utils";
-import type { Endpoint } from "comlink";
+import type { Endpoint, Remote } from "comlink";
 import EventEmitter from "eventemitter3";
 import { generateId } from "./misc";
 
@@ -48,21 +48,27 @@ export class EventEmitterMain {
   }
 }
 
-export async function sendCallbackRenderer(
-  callback: (data: any) => void,
-  sendCallbackPreload: (id: string) => Promise<Endpoint>,
-  receiveCallbackMain: (id: string) => Promise<void>
-) {
-  const id = generateId();
+export class EventEmitterRenderer {
+  constructor(
+    private remote: Remote<EventEmitterMain>,
+    private sendCallbackPreload: (callbackId: string) => Promise<Endpoint>
+  ) {}
 
-  // TODO: race condition? (preload sends early before main is ready?)
-  const [, port] = await Promise.all([
-    receiveCallbackMain(id),
-    sendCallbackPreload(id),
-  ]);
+  async on(event: string, handler: (...args: any[]) => void) {
+    const id = generateId();
 
-  // TODO: unsubscribe
-  port.addEventListener("message", (event) => {
-    callback(event);
-  });
+    // TODO: race condition? (preload sends early before main is ready?)
+    const [, port] = await Promise.all([
+      this.remote.on(event, id),
+      this.sendCallbackPreload(id),
+    ]);
+
+    port.addEventListener("message", handler);
+
+    return () => {
+      port.removeEventListener("message", handler);
+      // TODO: just type MessagePort instead of too general comlink.Endponit
+      // port.close();
+    };
+  }
 }
