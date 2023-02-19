@@ -3,6 +3,7 @@ import { generateId } from "./misc";
 
 // instantiate MessageChannel in preload and send MessagePort to main
 
+// TODO: rename to shareMessageChannel
 export async function sendMessagePortPreload(
   ipcRenderer: Electron.IpcRenderer,
   channel: string

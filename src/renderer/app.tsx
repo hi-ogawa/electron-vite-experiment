@@ -1,8 +1,10 @@
 import { Compose } from "@hiogawa/utils-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import React from "react";
 import toast from "react-hot-toast";
+import { DEFAULT_EVENT } from "../main/common";
 import { CustomQueryClientProvider, ToasterWrapper } from "./components/misc";
-import { mainServiceClient } from "./service-client";
+import { mainServiceClient, mainServiceEventEmitter } from "./service-client";
 
 export function App() {
   return (
@@ -28,13 +30,17 @@ function AppInner() {
   const counterMutation = useMutation({
     mutationKey: ["changeCounter"],
     mutationFn: (delta: number) => mainServiceClient.changeCounter(delta),
-    onSuccess: () => {
-      counterQuery.refetch();
-    },
     onError: (e) => {
       toast.error("changeCounter: " + String(e));
     },
   });
+
+  React.useEffect(() => {
+    // TODO: unsubscribe
+    mainServiceEventEmitter.on(DEFAULT_EVENT, () => {
+      counterQuery.refetch();
+    });
+  }, []);
 
   return (
     <div className="h-full bg-gray-50">

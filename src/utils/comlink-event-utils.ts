@@ -54,10 +54,12 @@ export class EventEmitterRenderer {
     private sendCallbackPreload: (callbackId: string) => Promise<Endpoint>
   ) {}
 
+  // TODO: a bit clumsy to unsubscribe due to async
   async on(event: string, handler: (...args: any[]) => void) {
     const id = generateId();
 
     // TODO: race condition? (preload sends early before main is ready?)
+    // TODO: e.g. what of the rendere fails to register? (works after reload)
     const [, port] = await Promise.all([
       this.remote.on(event, id),
       this.sendCallbackPreload(id),

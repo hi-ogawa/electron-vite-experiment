@@ -8,12 +8,6 @@ export class MainService {
     receiveMessagePortMainPromise(ipcMain, id)
   );
 
-  constructor() {
-    setInterval(() => {
-      this.eventEmitter.emit(DEFAULT_EVENT, "test");
-    }, 1000);
-  }
-
   private counter: number = 0;
 
   getCounter(): number {
@@ -22,5 +16,6 @@ export class MainService {
 
   changeCounter(delta: number) {
     this.counter += delta;
+    this.eventEmitter.emit(DEFAULT_EVENT, {});
   }
 }

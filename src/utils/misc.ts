@@ -4,3 +4,7 @@ export function generateId(): string {
     .slice(0, 12)
     .padStart(12, "0");
 }
+
+export function range(n: number): number[] {
+  return Array.from(Array(n), (_, i) => i);
+}
