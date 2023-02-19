@@ -27,7 +27,6 @@ export class EventEmitterMain {
   async on(event: string, callbackId: string) {
     tinyassert(!this.subscriptions.get(event).has(callbackId));
     const port = await this.receiveMessagePort(callbackId);
-    port.start();
     const handler = (e: unknown) => {
       port.postMessage(e);
     };

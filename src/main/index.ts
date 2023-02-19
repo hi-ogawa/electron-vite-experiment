@@ -1,8 +1,10 @@
 import path from "path";
 import { expose } from "comlink";
 import { BrowserWindow, app, ipcMain } from "electron";
-import { normalizeMessagePortMain } from "../utils/comlink-utils";
-import { receiveMessagePortMain } from "../utils/message-channel-utils";
+import {
+  normalizeMessagePortMain,
+  receiveMessagePortMain,
+} from "../utils/message-channel-utils";
 import { range } from "../utils/misc";
 import { EXPOSE_MAIN_SERVICE } from "./common";
 import { MainService } from "./service";

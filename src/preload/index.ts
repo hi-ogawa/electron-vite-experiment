@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { normalizeMessagePortPreload } from "../utils/comlink-utils";
-import { shareMessagePortPreload } from "../utils/message-channel-utils";
+import {
+  normalizeMessagePortPreload,
+  shareMessagePortPreload,
+} from "../utils/message-channel-utils";
 import { PRELOAD_API } from "./common";
 
 function main() {
