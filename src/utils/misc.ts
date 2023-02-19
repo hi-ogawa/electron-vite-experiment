@@ -8,3 +8,7 @@ export function generateId(): string {
 export function range(n: number): number[] {
   return Array.from(Array(n), (_, i) => i);
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

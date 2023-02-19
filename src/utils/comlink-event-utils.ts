@@ -1,7 +1,7 @@
 import { DefaultMap, tinyassert } from "@hiogawa/utils";
 import type { Remote } from "comlink";
 import EventEmitter from "eventemitter3";
-import { generateId } from "./misc";
+import { generateId, sleep } from "./misc";
 
 /**
  * DIY event callback system since `comlink.proxy` would require transfering MessagePort through "renderer -> preload -> main"
@@ -57,10 +57,9 @@ export class EventEmitterRenderer {
 
   // TODO: a bit clumsy to unsubscribe due to async
   async on(event: string, handler: (...args: any[]) => void) {
-    const id = generateId();
+    const id = `EventEmitterRenderer.on:${generateId()}`;
 
-    // TODO: race condition? (preload sends early before main is ready?)
-    // TODO: e.g. what of the rendere fails to register? (works after reload)
+    await sleep(0); // TODO: race condition?
     const [, port] = await Promise.all([
       this.remote.on(event, id),
       this.shareMessageChannelRenderer(id),

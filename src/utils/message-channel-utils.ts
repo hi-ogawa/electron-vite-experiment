@@ -9,14 +9,16 @@ export async function shareMessagePortPreload(
   ipcRenderer: Electron.IpcRenderer,
   channel: string
 ): Promise<MessagePort> {
+  // console.log("shareMessagePortPreload:register", channel);
   const { port1, port2 } = new MessageChannel();
-  const id = `shareMessageChannelPreload-${generateId()}`;
+  const id = `shareMessageChannelPreload:${generateId()}`;
   const message = { id };
 
   ipcRenderer.postMessage(channel, message, [port1]);
 
   await new Promise((resolve) => {
     function handler(_: Electron.IpcRendererEvent, reply: unknown) {
+      // console.log("shareMessagePortPreload:handler", channel);
       tinyassert(reply);
       if ((reply as any).id === message.id) {
         ipcRenderer.off(channel, handler);
@@ -35,7 +37,9 @@ export function receiveMessagePortMain(
   channel: string,
   onPort: (port: Electron.MessagePortMain) => void
 ) {
+  // console.log("receiveMessagePortMain:register", channel);
   const handler = (e: Electron.IpcMainEvent, message: unknown) => {
+    // console.log("receiveMessagePortMain:handler", channel);
     const port = e.ports[0];
     tinyassert(port);
     onPort(port);
