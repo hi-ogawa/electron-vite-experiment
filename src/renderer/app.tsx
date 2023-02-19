@@ -2,7 +2,7 @@ import { Compose } from "@hiogawa/utils-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React from "react";
 import toast from "react-hot-toast";
-import { DEFAULT_EVENT } from "../main/common";
+import { CHANGE_COUNTER } from "../main/common";
 import { CustomQueryClientProvider, ToasterWrapper } from "./components/misc";
 import { mainServiceClient, mainServiceEventEmitter } from "./service-client";
 
@@ -37,7 +37,7 @@ function AppInner() {
 
   React.useEffect(() => {
     // TODO: unsubscribe
-    mainServiceEventEmitter.on(DEFAULT_EVENT, () => {
+    mainServiceEventEmitter.on(CHANGE_COUNTER, () => {
       counterQuery.refetch();
     });
   }, []);

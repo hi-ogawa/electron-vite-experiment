@@ -1,7 +1,7 @@
 import path from "path";
 import { expose } from "comlink";
 import { BrowserWindow, app, ipcMain } from "electron";
-import { toMainEndpoint } from "../utils/comlink-utils";
+import { normalizeMessagePortMain } from "../utils/comlink-utils";
 import { receiveMessagePortMain } from "../utils/message-channel-utils";
 import { range } from "../utils/misc";
 import { EXPOSE_MAIN_SERVICE } from "./common";
@@ -23,7 +23,7 @@ async function main() {
 function setupService() {
   const service = new MainService();
   receiveMessagePortMain(ipcMain, EXPOSE_MAIN_SERVICE, (port) => {
-    expose(service, toMainEndpoint(port));
+    expose(service, normalizeMessagePortMain(port));
   });
 }
 

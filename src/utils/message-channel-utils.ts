@@ -3,13 +3,12 @@ import { generateId } from "./misc";
 
 // instantiate MessageChannel in preload and send MessagePort to main
 
-// TODO: rename to shareMessageChannel
-export async function sendMessagePortPreload(
+export async function shareMessagePortPreload(
   ipcRenderer: Electron.IpcRenderer,
   channel: string
 ): Promise<MessagePort> {
   const { port1, port2 } = new MessageChannel();
-  const id = `sendMessagePortPreload-${generateId()}`;
+  const id = `shareMessageChannelPreload-${generateId()}`;
   const message = { id };
 
   ipcRenderer.postMessage(channel, message, [port1]);
@@ -26,7 +25,6 @@ export async function sendMessagePortPreload(
     ipcRenderer.on(channel, handler);
   });
 
-  port2.start();
   return port2;
 }
 

@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { toPreloadEndpoint } from "../utils/comlink-utils";
-import { sendMessagePortPreload } from "../utils/message-channel-utils";
+import { normalizeMessagePortPreload } from "../utils/comlink-utils";
+import { shareMessagePortPreload } from "../utils/message-channel-utils";
 import { PRELOAD_API } from "./common";
 
 function main() {
@@ -9,9 +9,9 @@ function main() {
 }
 
 export class PreloadApi {
-  sendMessagePort = async (channel: string) => {
-    const port = await sendMessagePortPreload(ipcRenderer, channel);
-    return toPreloadEndpoint(port);
+  shareMessageChannelRenderer = async (channel: string) => {
+    const port = await shareMessagePortPreload(ipcRenderer, channel);
+    return normalizeMessagePortPreload(port);
   };
 }
 

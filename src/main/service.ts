@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import { EventEmitterMain } from "../utils/comlink-event-utils";
 import { receiveMessagePortMainPromise } from "../utils/message-channel-utils";
-import { DEFAULT_EVENT } from "./common";
+import { CHANGE_COUNTER } from "./common";
 
 export class MainService {
   public eventEmitter = new EventEmitterMain((id) =>
@@ -16,6 +16,6 @@ export class MainService {
 
   changeCounter(delta: number) {
     this.counter += delta;
-    this.eventEmitter.emit(DEFAULT_EVENT, {});
+    this.eventEmitter.emit(CHANGE_COUNTER, {});
   }
 }

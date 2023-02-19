@@ -12,14 +12,15 @@ export let mainServiceEventEmitter: EventEmitterRenderer;
 
 export async function initializeMainServiceClient(): Promise<void> {
   // request Remove<MainService>
-  const endpoint = await getGlobalPreloadApi().sendMessagePort(
+  const port = await getGlobalPreloadApi().shareMessageChannelRenderer(
     EXPOSE_MAIN_SERVICE
   );
-  mainServiceClient = wrap<MainService>(endpoint);
+  mainServiceClient = wrap<MainService>(port);
 
   // create EventEmitterRenderer as a wrapper of Remote<EventEmitterMain>
   mainServiceEventEmitter = new EventEmitterRenderer(
-    mainServiceClient.eventEmitter as unknown as Remote<EventEmitterMain>, // TODO: wrong comlink typing
-    getGlobalPreloadApi().sendMessagePort
+    // @ts-expect-error wrong comlink typing
+    mainServiceClient.eventEmitter as Remote<EventEmitterMain>,
+    getGlobalPreloadApi().shareMessageChannelRenderer
   );
 }

@@ -1,5 +1,5 @@
 import { DefaultMap, tinyassert } from "@hiogawa/utils";
-import type { Endpoint, Remote } from "comlink";
+import type { Remote } from "comlink";
 import EventEmitter from "eventemitter3";
 import { generateId } from "./misc";
 
@@ -51,7 +51,9 @@ export class EventEmitterMain {
 export class EventEmitterRenderer {
   constructor(
     private remote: Remote<EventEmitterMain>,
-    private sendCallbackPreload: (callbackId: string) => Promise<Endpoint>
+    private shareMessageChannelRenderer: (
+      channel: string
+    ) => Promise<MessagePort>
   ) {}
 
   // TODO: a bit clumsy to unsubscribe due to async
@@ -62,15 +64,14 @@ export class EventEmitterRenderer {
     // TODO: e.g. what of the rendere fails to register? (works after reload)
     const [, port] = await Promise.all([
       this.remote.on(event, id),
-      this.sendCallbackPreload(id),
+      this.shareMessageChannelRenderer(id),
     ]);
-
+    port.start();
     port.addEventListener("message", handler);
 
     return () => {
+      port.close();
       port.removeEventListener("message", handler);
-      // TODO: just type MessagePort instead of too general comlink.Endponit
-      // port.close();
     };
   }
 }
