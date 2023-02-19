@@ -51,5 +51,11 @@
   },
   "volta": {
     "node": "18.14.0"
+  },
+  "dependencies": {
+    "@hiogawa/utils-react": "1.0.0-pre.1",
+    "@tanstack/react-query": "^4.24.9",
+    "@tanstack/react-query-devtools": "^4.24.9",
+    "react-hot-toast": "^2.4.0"
   }
 }

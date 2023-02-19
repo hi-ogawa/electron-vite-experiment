@@ -14,7 +14,13 @@ export class MainService {
     }, 1000);
   }
 
-  hello(who: string) {
-    return "hello " + who;
+  private counter: number = 0;
+
+  getCounter(): number {
+    return this.counter;
+  }
+
+  changeCounter(delta: number) {
+    this.counter += delta;
   }
 }

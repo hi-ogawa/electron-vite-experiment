@@ -1,27 +1,62 @@
-import React from "react";
+import { Compose } from "@hiogawa/utils-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { CustomQueryClientProvider, ToasterWrapper } from "./components/misc";
 import { mainServiceClient } from "./service-client";
 
 export function App() {
-  const [count, setCount] = React.useState(0);
+  return (
+    <Compose
+      elements={[
+        <CustomQueryClientProvider />,
+        <ToasterWrapper />,
+        <AppInner />,
+      ]}
+    />
+  );
+}
 
-  React.useEffect(() => {
-    (async () => {
-      const result = await mainServiceClient.hello("project");
-      console.log(result);
-    })();
-  }, []);
+function AppInner() {
+  const counterQuery = useQuery({
+    queryKey: ["getCounter"],
+    queryFn: () => mainServiceClient.getCounter(),
+    onError: (e) => {
+      toast.error("getCounter: " + String(e));
+    },
+  });
+
+  const counterMutation = useMutation({
+    mutationKey: ["changeCounter"],
+    mutationFn: (delta: number) => mainServiceClient.changeCounter(delta),
+    onSuccess: () => {
+      counterQuery.refetch();
+    },
+    onError: (e) => {
+      toast.error("changeCounter: " + String(e));
+    },
+  });
 
   return (
     <div className="h-full bg-gray-50">
       <div className="h-full flex justify-center items-center p-2">
         <div className="w-sm max-w-full flex flex-col items-center gap-3 p-5 bg-white border">
-          <div>Counter = {count}</div>
-          <button
-            className="w-full bg-gray-600 hover:bg-gray-700 text-white border"
-            onClick={() => setCount((v) => v + 1)}
-          >
-            +1
-          </button>
+          <div>Counter = {counterQuery.data ?? "..."}</div>
+          <div className="flex w-full gap-1">
+            <button
+              className="flex-1 w-full bg-gray-600 hover:bg-gray-700 text-white border"
+              disabled={counterQuery.isFetching || counterMutation.isLoading}
+              onClick={() => counterMutation.mutate(-1)}
+            >
+              -1
+            </button>
+            <button
+              className="flex-1 w-full bg-gray-600 hover:bg-gray-700 text-white border"
+              disabled={counterQuery.isFetching || counterMutation.isLoading}
+              onClick={() => counterMutation.mutate(+1)}
+            >
+              +1
+            </button>
+          </div>
         </div>
       </div>
     </div>
